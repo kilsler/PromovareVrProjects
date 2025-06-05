@@ -7,14 +7,12 @@ import com.auth_demo.auth_demo.entity.Link;
 import com.auth_demo.auth_demo.repository.AuthorRepository;
 import com.auth_demo.auth_demo.repository.PhotoRepository;
 import com.auth_demo.auth_demo.repository.ProjectRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,6 +43,10 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
+    public Optional<Project> getProjectById(Long projectId) {
+        return projectRepository.findById(projectId);
+    }
+
     @Transactional
     public Project createProject(Project project) {
         // Привязка авторов из базы
@@ -62,5 +64,42 @@ public class ProjectService {
 
         return projectRepository.save(project);
     }
+
+    @Transactional
+    public Project updateProject(Long projectId,Project updatedProject) {
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Проект не найден"));
+
+        existingProject.setName(updatedProject.getName());
+        existingProject.setDescription(updatedProject.getDescription());
+
+        // Обновление авторов
+        List<Author> authors = updatedProject.getAuthors().stream()
+                .map(a -> authorRepository.findById(a.getId()).orElseThrow())
+                .collect(Collectors.toList());
+        existingProject.setAuthors(authors);
+
+        // Обновление ссылок
+        existingProject.getLinks().clear();
+        if (updatedProject.getLinks() != null) {
+            for (Link link : updatedProject.getLinks()) {
+                link.setProject(existingProject);
+                existingProject.getLinks().add(link);
+            }
+        }
+
+        // Обновление фотографий
+        if (updatedProject.getPhotos() != null && !updatedProject.getPhotos().isEmpty()) {
+            existingProject.getPhotos().clear();
+            for (Photo photo : updatedProject.getPhotos()) {
+                photo.setProject(existingProject);
+                existingProject.getPhotos().add(photo);
+            }
+        }
+
+        return projectRepository.save(existingProject);
+    }
+
+
 }
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -28,6 +29,12 @@ public class ProjectController {
     public ResponseEntity<List<Project>> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity<Optional<Project>> getAllProjects(@PathVariable Long projectId) {
+        Optional<Project> project = projectService.getProjectById(projectId);
+        return ResponseEntity.ok(project);
     }
 
     @GetMapping("/authors")
@@ -51,6 +58,11 @@ public class ProjectController {
     @PostMapping(value = "/projects/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
         Project saved = projectService.createProject(project);
+        return ResponseEntity.ok(saved);
+    }
+    @PostMapping(value = "/projects/{projectId}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Project> updateProject(@PathVariable Long projectId,@RequestBody Project project) {
+        Project saved = projectService.updateProject(projectId,project);
         return ResponseEntity.ok(saved);
     }
 
