@@ -1,0 +1,93 @@
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
+import NavBar from './components/NavBar';
+import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+import About from './pages/About';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import Admin from './pages/Admin';
+
+function App() {
+  const [auth, setAuth] = useState({ isAuthenticated: false, username: '', roles: [] });
+  const [csrfToken, setCsrfToken] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/auth/status', { withCredentials: true })
+      .then(response => {
+        setAuth({
+          isAuthenticated: response.data.isAuthenticated,
+          username: response.data.username || '',
+          roles: response.data.roles ? response.data.roles.map(role => role.authority) : []
+        });
+        setCsrfToken(response.data._csrf || '');
+      })
+      .catch(() => {
+        setAuth({ isAuthenticated: false, username: '', roles: [] });
+        setCsrfToken('');
+      });
+  }, []);
+
+  const handleLogin = (username, password) => {
+    const formData = new FormData();
+    formData.append('username', username);
+    formData.append('password', password);
+    formData.append('_csrf', csrfToken);
+
+    return axios.post('http://localhost:8080/login', formData, { withCredentials: true })
+      .then(() => {
+        return axios.get('http://localhost:8080/api/auth/status', { withCredentials: true })
+          .then(response => {
+            setAuth({
+              isAuthenticated: response.data.isAuthenticated,
+              username: response.data.username || '',
+              roles: response.data.roles ? response.data.roles.map(role => role.authority) : []
+            });
+            setCsrfToken(response.data._csrf || '');
+          });
+      });
+  };
+
+  const handleLogout = () => {
+    axios.post('http://localhost:8080/logout', {}, { withCredentials: true })
+      .then(() => {
+        setAuth({ isAuthenticated: false, username: '', roles: [] });
+        setCsrfToken('');
+      });
+  };
+
+  return (
+    <BrowserRouter>
+      <div>
+        <NavBar auth={auth} onLogout={handleLogout} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} csrfToken={csrfToken} />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute isAuthenticated={auth.isAuthenticated} redirectTo="/login">
+                <Profile username={auth.username} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute
+                isAuthenticated={auth.isAuthenticated && auth.roles.includes('ROLE_ADMIN')}
+                redirectTo="/login"
+              >
+                <Admin username={auth.username} />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
