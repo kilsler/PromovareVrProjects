@@ -2,6 +2,8 @@ package com.auth_demo.auth_demo.controller;
 
 import com.auth_demo.auth_demo.entity.Author;
 import com.auth_demo.auth_demo.entity.Project;
+import com.auth_demo.auth_demo.repository.PhotoRepository;
+import com.auth_demo.auth_demo.repository.ProjectRepository;
 import com.auth_demo.auth_demo.service.AuthorService;
 import com.auth_demo.auth_demo.service.ProjectService;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -19,10 +22,18 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final AuthorService authorService;
+    private final PhotoRepository photoRepository;
 
-    public ProjectController(ProjectService projectService, AuthorService authorService) {
+    public ProjectController(ProjectService projectService, AuthorService authorService, PhotoRepository photoRepository) {
         this.authorService = authorService;
         this.projectService = projectService;
+        this.photoRepository = photoRepository;
+    }
+
+    @GetMapping("/authors")
+    public ResponseEntity<List<Author>> getAllAuthors() {
+        List<Author> authors = authorService.getAllAuthors();
+        return ResponseEntity.ok(authors);
     }
 
     @GetMapping("/projects")
@@ -37,17 +48,11 @@ public class ProjectController {
         return ResponseEntity.ok(project);
     }
 
-    @GetMapping("/authors")
-    public ResponseEntity<List<Author>> getAllAuthors() {
-        List<Author> authors = authorService.getAllAuthors();
-        return ResponseEntity.ok(authors);
-    }
-
     @PostMapping("/projects/{projectId}/photos")
-    public ResponseEntity<String> uploadPhoto(@PathVariable Long projectId,
-                                              @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> uploadPhoto(@PathVariable Long projectId,@RequestBody Map<String, String> request) {
         try {
-            projectService.savePhoto(projectId, file);
+            String base64Image = request.get("image");
+            projectService.savePhoto(projectId, base64Image);
             return ResponseEntity.ok("Фото загружено успешно");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -55,17 +60,45 @@ public class ProjectController {
         }
     }
 
-    @PostMapping(value = "/projects/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/projects", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> createProject(@RequestBody Project project) {
         Project saved = projectService.createProject(project);
         return ResponseEntity.ok(saved);
     }
-    @PostMapping(value = "/projects/{projectId}/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+
+    @PostMapping(value = "/projects/{projectId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> updateProject(@PathVariable Long projectId,@RequestBody Project project) {
         Project saved = projectService.updateProject(projectId,project);
         return ResponseEntity.ok(saved);
     }
 
+    @DeleteMapping("/projects/photos/{photoId}")
+    public ResponseEntity<String> deletePhoto(@PathVariable Long photoId) {
+        try {
+            if (!photoRepository.existsById(photoId)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Фото не найдено");
+            }
+            photoRepository.deleteById(photoId);
+            return ResponseEntity.ok("Фото успешно удалено");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при удалении фото: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<String> deleteProject(@PathVariable Long projectId) {
+        try {
+            if (!projectService.existsProject(projectId)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Проект не найдено");
+            }
+            projectService.delete(projectId);
+            return ResponseEntity.ok("Проект успешно удалено");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка при удалении проекта: " + e.getMessage());
+        }
+    }
 }
 
 

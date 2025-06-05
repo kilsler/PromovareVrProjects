@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,19 +29,23 @@ public class ProjectService {
         this.authorRepository = authorRepository;
     }
 
-    public void savePhoto(Long projectId, MultipartFile file) throws IOException {
+    public void savePhoto(Long projectId, String base64Image) throws IOException {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Проект не найден"));
-
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
         Photo photo = new Photo();
         photo.setProject(project);
-        photo.setImage(file.getBytes()); // сохраняем содержимое файла в byte[]
+        photo.setImage(imageBytes);
 
         photoRepository.save(photo);
     }
 
     public List<Project> getAllProjects() {
         return projectRepository.findAll();
+    }
+
+    public Boolean existsProject(Long projectId) {
+        return projectRepository.existsById(projectId);
     }
 
     public Optional<Project> getProjectById(Long projectId) {
@@ -101,5 +106,8 @@ public class ProjectService {
     }
 
 
+    public void delete(Long projectId) {
+        projectRepository.deleteById(projectId);
+    }
 }
 

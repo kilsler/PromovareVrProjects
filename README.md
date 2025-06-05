@@ -82,9 +82,15 @@ Example
 
 ```
 
-- `POST: /api/projects/{projectId}/photos` Adds on used id image(used for test and will be deleted)
+- `POST: /api/projects/{projectId}/photos` Uploads on used id image(completely rewrites images, so send old images with the new one)
 Expects file 
-- `POST: /api/projects/create` Adds project
+```
+{
+  "image": "iVBORw0KGgoAAAANSUhEUgAAADIA..." // Base64 строка
+}
+```
+
+- `POST: /api/projects/` Adds project
 Expected example of data:
 ```
 {
@@ -114,7 +120,7 @@ Expected example of data:
 }
 
 ```
-- `POST: /api/projects/{projectId}/update` Updates project data  
+- `POST: /api/projects/{projectId}` Updates project data  
 In case if photos array is empty("photos":[]) then it will use old values ,else it will rewrite the photos array for project.
 Expected example of data:
 ```
@@ -145,3 +151,6 @@ Expected example of data:
 }
 
 ```
+- `DELETE: /api/projects/{projectId}` removes the project by Id 
+- `DELETE: /api/projects/photos/{photoId}` removes the photo by it's Id  
+
