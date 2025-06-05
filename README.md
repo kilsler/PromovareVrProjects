@@ -1,4 +1,6 @@
 # Current progress
+- `auth_demo_01` Example of using backend endpoints  
+- `auth-demoJWT` Backend project written using SPring framework  
 ## Current backend endpoints
 - `GET: /api/projects`  Returns list of current projects
 Example  
