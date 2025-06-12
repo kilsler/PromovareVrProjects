@@ -158,3 +158,40 @@ Expected example of data:
 - `DELETE: /api/projects/{projectId}` removes the project by Id 
 - `DELETE: /api/projects/photos/{photoId}` removes the photo by it's Id  
 
+## Current SQL script for MYSQL
+```
+sql
+CREATE TABLE author (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE project (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    video_url VARCHAR(255)
+);
+
+CREATE TABLE project_authors (
+    project_id BIGINT NOT NULL,
+    author_id BIGINT NOT NULL,
+    PRIMARY KEY (project_id, author_id),
+    FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES author(id) ON DELETE CASCADE
+);
+
+CREATE TABLE link (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    url VARCHAR(500) NOT NULL,
+    project_id BIGINT,
+    FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
+);
+
+CREATE TABLE photo (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    image LONGBLOB NOT NULL,
+    project_id BIGINT,
+    FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
+);
+```
