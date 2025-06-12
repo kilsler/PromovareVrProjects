@@ -16,12 +16,9 @@ public class Project {
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
+    private String videoUrl;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "project_authors",
-            joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
+    @JoinTable(name = "project_authors", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authors = new ArrayList<>();
 
@@ -56,7 +53,13 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String getVideoUrl() {
+        return videoUrl;
+    }
 
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
     public List<Author> getAuthors() {
         return authors;
     }
@@ -81,10 +84,11 @@ public class Project {
         this.photos = photos;
     }
 
-    public Project(Long id, String name, String description, List<Author> authors, List<Link> links, List<Photo> photos) {
+    public Project(Long id, String name, String description,String videoUrl, List<Author> authors, List<Link> links, List<Photo> photos) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.videoUrl = videoUrl;
         this.authors = authors;
         this.links = links;
         this.photos = photos;

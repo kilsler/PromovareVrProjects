@@ -77,7 +77,7 @@ public class ProjectService {
 
         existingProject.setName(updatedProject.getName());
         existingProject.setDescription(updatedProject.getDescription());
-
+        existingProject.setVideoUrl(updatedProject.getVideoUrl());
         // Обновление авторов
         List<Author> authors = updatedProject.getAuthors().stream()
                 .map(a -> authorRepository.findById(a.getId()).orElseThrow())

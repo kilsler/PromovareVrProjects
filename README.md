@@ -29,6 +29,7 @@ Example
         "id": 4,
         "name": "asdasd",
         "description": "asdasd",
+        "videoUrl": "videoURL",
         "authors": [
             {
                 "id": 1,
@@ -60,6 +61,7 @@ Example
         "id": 4,
         "name": "asdasd",
         "description": "asdasd",
+        "videoUrl": "videoURL",
         "authors": [
             {
                 "id": 1,
@@ -96,6 +98,7 @@ Expected example of data:
 {
     "name": "Name of project",
     "description": "description",
+    "videoUrl": "videoURL",
     "authors": [
         {
             "id": 1
@@ -127,6 +130,7 @@ Expected example of data:
 {
     "name": "Name of project",
     "description": "description",
+    "videoUrl": "videoURL",
     "authors": [
         {
             "id": 1
