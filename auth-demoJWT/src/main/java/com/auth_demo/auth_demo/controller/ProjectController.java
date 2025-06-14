@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,7 @@ public class ProjectController {
         return ResponseEntity.ok(saved);
     }
 
-    @PostMapping(value = "/projects/{projectId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/projects/{projectId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Project> updateProject(@PathVariable Long projectId,@RequestBody Project project) {
         Project saved = projectService.updateProject(projectId,project);
         return ResponseEntity.ok(saved);

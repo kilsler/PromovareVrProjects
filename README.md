@@ -2,7 +2,7 @@
 - `auth_demo_01` Example of using backend endpoints  
 - `auth-demoJWT` Backend project written using SPring framework  
 ## Current backend endpoints  
-
+### Public(no token needed)
 - `GET: /api/authors` Returns list of authors  
 Example
 ```
@@ -83,7 +83,11 @@ Example
     },
 
 ```
-
+### Private token needed
+Token should be given in header:
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+``` 
 - `POST: /api/projects/{projectId}/photos` Uploads on used id image(completely rewrites images, so send old images with the new one)
 Expects file 
 ```
@@ -123,7 +127,7 @@ Expected example of data:
 }
 
 ```
-- `POST: /api/projects/{projectId}` Updates project data  
+- `PUT: /api/projects/{projectId}` Updates project data  
 In case if photos array is empty("photos":[]) then it will use old values ,else it will rewrite the photos array for project.
 Expected example of data:
 ```
@@ -193,5 +197,11 @@ CREATE TABLE photo (
     image LONGBLOB NOT NULL,
     project_id BIGINT,
     FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL
 );
 ```
