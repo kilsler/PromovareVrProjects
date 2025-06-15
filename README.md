@@ -3,6 +3,29 @@
 - `auth-demoJWT` Backend project written using SPring framework  
 ## Current backend endpoints  
 ### Public(no token needed)
+
+- `POST: /auth/register` Registers new user 
+Expected data  
+```
+{
+  "username": "user1",
+  "password": "1234"
+}
+```
+- `POST: /auth/login` Returns jwt token 
+Expected data  
+```
+{
+  "username": "user1",
+  "password": "1234"
+}
+```
+Expected return  
+```
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTc0OTkwODAxNTA4NX0=.Y6arXWaogslQ96vfMTA1qREq7DCtkwvJMttllY4cAms"
+}
+```
 - `GET: /api/authors` Returns list of authors  
 Example
 ```
