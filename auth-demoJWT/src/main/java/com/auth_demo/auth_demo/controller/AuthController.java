@@ -2,7 +2,6 @@ package com.auth_demo.auth_demo.controller;
 
 import com.auth_demo.auth_demo.dto.AuthRequest;
 import com.auth_demo.auth_demo.dto.AuthResponse;
-import com.auth_demo.auth_demo.entity.UserEntity;
 import com.auth_demo.auth_demo.repository.UserRepository;
 import com.auth_demo.auth_demo.security.JwtUtil;
 import org.springframework.http.HttpStatus;
@@ -45,20 +44,6 @@ public class AuthController {
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AuthRequest request) {
-        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        }
-
-        UserEntity user = new UserEntity();
-        user.setUsername(request.getUsername());
-        user.setPassword(encoder.encode(request.getPassword()));
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered");
     }
 }
 

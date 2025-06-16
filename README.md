@@ -4,15 +4,7 @@
 ## Current backend endpoints  
 ### Public(no token needed)
 
-- `POST: /auth/register` Registers new user 
-Expected data  
-```
-{
-  "username": "user1",
-  "password": "1234"
-}
-```
-- `POST: /auth/login` Returns jwt token 
+- `POST: /auth/login` Returns jwt token  
 Expected data  
 ```
 {
@@ -109,7 +101,7 @@ Example
 ### Private token needed
 Token should be given in header:
 ```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."  
 ``` 
 - `POST: /api/projects/{projectId}/photos` Uploads on used id image(completely rewrites images, so send old images with the new one)
 Expects file 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtUtil {
 
-    private final String SECRET = "mySecretKey1234567890";
+    private final String SECRET = "promovare2025VR";
 
     public String generateToken(String username) {
         long now = System.currentTimeMillis();

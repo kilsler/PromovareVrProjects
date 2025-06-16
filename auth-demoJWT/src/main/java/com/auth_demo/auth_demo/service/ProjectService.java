@@ -54,13 +54,11 @@ public class ProjectService {
 
     @Transactional
     public Project createProject(Project project) {
-        // Привязка авторов из базы
         List<Author> authors = project.getAuthors().stream()
                 .map(a -> authorRepository.findById(a.getId()).orElseThrow())
                 .collect(Collectors.toList());
         project.setAuthors(authors);
 
-        // Привязка проекта к фотографиям
         if (project.getPhotos() != null) {
             for (Photo photo : project.getPhotos()) {
                 photo.setProject(project);
@@ -78,13 +76,12 @@ public class ProjectService {
         existingProject.setName(updatedProject.getName());
         existingProject.setDescription(updatedProject.getDescription());
         existingProject.setVideoUrl(updatedProject.getVideoUrl());
-        // Обновление авторов
+
         List<Author> authors = updatedProject.getAuthors().stream()
                 .map(a -> authorRepository.findById(a.getId()).orElseThrow())
                 .collect(Collectors.toList());
         existingProject.setAuthors(authors);
 
-        // Обновление ссылок
         existingProject.getLinks().clear();
         if (updatedProject.getLinks() != null) {
             for (Link link : updatedProject.getLinks()) {
@@ -93,7 +90,6 @@ public class ProjectService {
             }
         }
 
-        // Обновление фотографий
         if (updatedProject.getPhotos() != null && !updatedProject.getPhotos().isEmpty()) {
             existingProject.getPhotos().clear();
             for (Photo photo : updatedProject.getPhotos()) {
