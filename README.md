@@ -35,6 +35,17 @@ Example
         "name": "Алексей Смирнов"
     }
 ]
+```  
+
+- `GET: /api/authors/{authorId}` Returns author by id  
+Example
+```
+[
+    {
+        "id": 1,
+        "name": "Иван Иванов"
+    }
+]
 ```
 - `GET: /api/projects`  Returns list of current projects
 Example  
@@ -176,6 +187,25 @@ Expected example of data:
 ```
 - `DELETE: /api/projects/{projectId}` removes the project by Id 
 - `DELETE: /api/projects/photos/{photoId}` removes the photo by it's Id  
+
+- `POST: /api/authors` creates new author  
+Expected example of data:
+```
+{
+    "name": "Name of author"
+}
+
+```
+- `PUT: /api/authors/{projectId}` Updates existing author data  
+Expected example of data:
+```
+{
+    "name": "Name of author"
+}
+
+```
+- `DELETE: /api/authors/{projectId}` Removes existing author  
+
 
 ## Current SQL script for MYSQL
 ```

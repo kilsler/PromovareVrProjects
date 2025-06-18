@@ -20,19 +20,11 @@ import java.util.Optional;
 public class ProjectController {
 
     private final ProjectService projectService;
-    private final AuthorService authorService;
     private final PhotoRepository photoRepository;
 
-    public ProjectController(ProjectService projectService, AuthorService authorService, PhotoRepository photoRepository) {
-        this.authorService = authorService;
+    public ProjectController(ProjectService projectService, PhotoRepository photoRepository) {
         this.projectService = projectService;
         this.photoRepository = photoRepository;
-    }
-
-    @GetMapping("/authors")
-    public ResponseEntity<List<Author>> getAllAuthors() {
-        List<Author> authors = authorService.getAllAuthors();
-        return ResponseEntity.ok(authors);
     }
 
     @GetMapping("/projects")
@@ -42,7 +34,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{projectId}")
-    public ResponseEntity<Optional<Project>> getAllProjects(@PathVariable Long projectId) {
+    public ResponseEntity<Optional<Project>> getProjectById(@PathVariable Long projectId) {
         Optional<Project> project = projectService.getProjectById(projectId);
         return ResponseEntity.ok(project);
     }
