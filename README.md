@@ -321,4 +321,17 @@ CREATE TABLE users (
   username VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE tag (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE project_tags (
+    project_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    PRIMARY KEY (project_id, tag_id),
+    FOREIGN KEY (project_id) REFERENCES project(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
+);
 ```
