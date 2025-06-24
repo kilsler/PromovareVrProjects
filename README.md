@@ -40,13 +40,35 @@ Example
 - `GET: /api/authors/{authorId}` Returns author by id  
 Example
 ```
+{
+    "id": 1,
+    "name": "Иван Иванов"
+}
+```
+
+- `GET: /api/tags` Returns tags
+Example
+```
 [
     {
         "id": 1,
-        "name": "Иван Иванов"
+        "name": "Games"
+    },
+    {
+        "id": 2,
+        "name": "Scence"
     }
 ]
 ```
+- `GET: /api/tags/{tagId}` Returns tag by id  
+Example
+```
+{
+    "id": 3,
+    "name": "eadsdas"
+}
+```
+
 - `GET: /api/projects`  Returns list of current projects
 Example  
 ```
@@ -66,6 +88,16 @@ Example
             {
                 "id": 5,
                 "url": "https://github.com/project-aa"
+            }
+        ],
+        "tags": [
+            {
+                "id": 1,
+                "name": "Games"
+            },
+            {
+                "id": 2,
+                "name": "Scence"
             }
         ],
         "photos": [
@@ -98,6 +130,16 @@ Example
             {
                 "id": 5,
                 "url": "https://github.com/project-aa"
+            }
+        ],
+        "tags": [
+            {
+                "id": 1,
+                "name": "Games"
+            },
+            {
+                "id": 2,
+                "name": "Scence"
             }
         ],
         "photos": [
@@ -145,6 +187,14 @@ Expected example of data:
             "url": "https://github.com/project-second"
         }
     ],
+    "tags": [
+            {
+                "id": 1
+            },
+            {
+                "id": 2
+            }
+        ],
     "photos": [
         {
             "image": "/9j/4AAQSkZJRgABAQAAAQABAAD/4nY8SUNDX1BST0ZJTEUAAQEAAHYsYXBwbAQAAABzY25yUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwztRYAMEZtDPzYjzFqRlPTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApoG5sIuD7V01zpLlWt4o1E9qzLkOCjR7toCkttO1iPujJBJPSudkieMI7kYlU4wQTgEjkA8cg9a6sNiY1FZFVaLiNWMAFyQenB9D3+n9ahH1xUmCcgjoPypBjFda0OdjDg/MBtXgYB/X9KXBOSvAGBxx1pwwCMjn3oOCOT93oPWi4Ib0Gcgk8/ke9HyhTnr9OM/n6Zp7AkbgMdAccfTim5wA7jJJ/A47UXHYMA4x16U3ilAUYblu57YPbmlI6luQaCLWGcgYPAYZxxzzxmj5cZ6Y6DtzRjB+Yfh9acQcBzyDwPw7UAxG5CnPTjHsKQ57nPAo+hxnjilAxnByAO/FVsIPpTeOM9OKflD/ALIGB6/jQvyEE55HIHB560gGnacALgAD8aaVGC2QDnG3nPPf6VJtwAc9ewzxTcdO+KENCCF2XcORtLdegHBpGADYTOB3NPKiM84JPPtg9OKAH2sVHGPm+meKpDfoRHGBtznHPsaByBngHv7jtSnpSc7cdqroRcFXd8vQjn8qbTtig4ByM0mO9CGIQoHvxj0po3E5XJbqPrTz8uCMHH5flUXt0B7VSENJz"
@@ -177,6 +227,14 @@ Expected example of data:
             "url": "https://github.com/project-second"
         }
     ],
+    "tags": [
+            {
+                "id": 1
+            },
+            {
+                "id": 2
+            }
+        ],
     "photos": [
         {
             "image": "/9j/4AAQSkZJRgABAQAAAQABAAD/4nY8SUNDX1BST0ZJTEUAAQEAAHYsYXBwbAQAAABzY25yUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwztRYAMEZtDPzYjzFqRlPTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApoG5sIuD7V01zpLlWt4o1E9qzLkOCjR7toCkttO1iPujJBJPSudkieMI7kYlU4wQTgEjkA8cg9a6sNiY1FZFVaLiNWMAFyQenB9D3+n9ahH1xUmCcgjoPypBjFda0OdjDg/MBtXgYB/X9KXBOSvAGBxx1pwwCMjn3oOCOT93oPWi4Ib0Gcgk8/ke9HyhTnr9OM/n6Zp7AkbgMdAccfTim5wA7jJJ/A47UXHYMA4x16U3ilAUYblu57YPbmlI6luQaCLWGcgYPAYZxxzzxmj5cZ6Y6DtzRjB+Yfh9acQcBzyDwPw7UAxG5CnPTjHsKQ57nPAo+hxnjilAxnByAO/FVsIPpTeOM9OKflD/ALIGB6/jQvyEE55HIHB560gGnacALgAD8aaVGC2QDnG3nPPf6VJtwAc9ewzxTcdO+KENCCF2XcORtLdegHBpGADYTOB3NPKiM84JPPtg9OKAH2sVHGPm+meKpDfoRHGBtznHPsaByBngHv7jtSnpSc7cdqroRcFXd8vQjn8qbTtig4ByM0mO9CGIQoHvxj0po3E5XJbqPrTz8uCMHH5flUXt0B7VSENJz"
@@ -206,7 +264,21 @@ Expected example of data:
 ```
 - `DELETE: /api/authors/{projectId}` Removes existing author  
 
-
+- `POST: /api/tags` Creates new tag 
+Example
+```
+{
+    "name": "NewTagName"
+}
+```
+- `PUT: /api/tags/{tagId}` Updates tag by Id
+Example
+```
+{
+    "name": "newTagName"
+}
+```
+- `DELETE: /api/tags/{tagId}` DELETES TegById 
 ## Current SQL script for MYSQL
 ```
 sql

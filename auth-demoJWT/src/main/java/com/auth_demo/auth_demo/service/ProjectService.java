@@ -1,12 +1,10 @@
 package com.auth_demo.auth_demo.service;
 
-import com.auth_demo.auth_demo.entity.Author;
-import com.auth_demo.auth_demo.entity.Photo;
-import com.auth_demo.auth_demo.entity.Project;
-import com.auth_demo.auth_demo.entity.Link;
+import com.auth_demo.auth_demo.entity.*;
 import com.auth_demo.auth_demo.repository.AuthorRepository;
 import com.auth_demo.auth_demo.repository.PhotoRepository;
 import com.auth_demo.auth_demo.repository.ProjectRepository;
+import com.auth_demo.auth_demo.repository.TagRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,11 +20,16 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final PhotoRepository photoRepository;
     private final AuthorRepository authorRepository;
+    private final TagRepository tagRepository;
 
-    public ProjectService(ProjectRepository projectRepository, PhotoRepository photoRepository, AuthorRepository authorRepository) {
+    public ProjectService(ProjectRepository projectRepository,
+                          PhotoRepository photoRepository,
+                          AuthorRepository authorRepository,
+                          TagRepository tagRepository) {
         this.projectRepository = projectRepository;
         this.photoRepository = photoRepository;
         this.authorRepository = authorRepository;
+        this.tagRepository = tagRepository;
     }
 
     public void savePhoto(Long projectId, String base64Image) throws IOException {
@@ -59,6 +62,23 @@ public class ProjectService {
                 .collect(Collectors.toList());
         project.setAuthors(authors);
 
+        if (project.getTags() != null) {
+            List<Tag> tags = project.getTags().stream()
+                    .map(tag -> tagRepository.findById(tag.getId()).orElseThrow())
+                    .collect(Collectors.toList());
+            project.setTags(tags);
+        }
+
+        if (project.getLinks() != null) {
+            List<Link> newLinks = project.getLinks().stream().map(link -> {
+                Link newLink = new Link();
+                newLink.setUrl(link.getUrl());
+                newLink.setProject(project);
+                return newLink;
+            }).collect(Collectors.toList());
+            project.setLinks(newLinks);
+        }
+
         if (project.getPhotos() != null) {
             for (Photo photo : project.getPhotos()) {
                 photo.setProject(project);
@@ -83,11 +103,21 @@ public class ProjectService {
         existingProject.setAuthors(authors);
 
         existingProject.getLinks().clear();
+
         if (updatedProject.getLinks() != null) {
             for (Link link : updatedProject.getLinks()) {
-                link.setProject(existingProject);
-                existingProject.getLinks().add(link);
+                Link newLink = new Link();
+                newLink.setUrl(link.getUrl());  // только поля без id
+                newLink.setProject(existingProject);
+                existingProject.getLinks().add(newLink);
             }
+        }
+
+        if (updatedProject.getTags() != null) {
+            List<Tag> tags = updatedProject.getTags().stream()
+                    .map(t -> tagRepository.findById(t.getId()).orElseThrow())
+                    .collect(Collectors.toList());
+            existingProject.setTags(tags);
         }
 
         if (updatedProject.getPhotos() != null && !updatedProject.getPhotos().isEmpty()) {
