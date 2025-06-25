@@ -6,6 +6,9 @@ import com.auth_demo.auth_demo.repository.PhotoRepository;
 import com.auth_demo.auth_demo.repository.ProjectRepository;
 import com.auth_demo.auth_demo.service.AuthorService;
 import com.auth_demo.auth_demo.service.ProjectService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,16 @@ public class ProjectController {
     @GetMapping("/projects")
     public ResponseEntity<List<Project>> getAllProjects() {
         List<Project> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/projects/paged")
+    public ResponseEntity<Page<Project>> getPagedProjects(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Project> projects = projectService.getAllTrojectsByPage(pageable);
         return ResponseEntity.ok(projects);
     }
 

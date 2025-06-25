@@ -5,6 +5,8 @@ import com.auth_demo.auth_demo.repository.AuthorRepository;
 import com.auth_demo.auth_demo.repository.PhotoRepository;
 import com.auth_demo.auth_demo.repository.ProjectRepository;
 import com.auth_demo.auth_demo.repository.TagRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -134,6 +136,10 @@ public class ProjectService {
 
     public void delete(Long projectId) {
         projectRepository.deleteById(projectId);
+    }
+
+    public Page<Project> getAllTrojectsByPage(Pageable pageable) {
+        return projectRepository.findAll(pageable);
     }
 }
 

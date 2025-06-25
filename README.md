@@ -151,6 +151,103 @@ Example
     },
 
 ```
+
+
+http://localhost:8080/api/projects/paged?page=2&size=3
+
+
+- `GET: /api/projects/paged?page=2&size=3`  Returns projects by pages(default page 0 , default size = 6)
+Example  
+```
+{
+    "content": [
+        {
+            "id": 14,
+            "name": "Проект Beta",
+            "description": "Описание проекта Бета",
+            "videoUrl": "just some url",
+            "authors": [
+                {
+                    "id": 3,
+                    "name": "Алексей Смирнов"
+                }
+            ],
+            "links": [
+                {
+                    "id": 21,
+                    "url": "https://github.com/project-beta"
+                }
+            ],
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Games"
+                },
+                {
+                    "id": 2,
+                    "name": "Scence"
+                }
+            ],
+            "photos": []
+        },
+        {
+            "id": 15,
+            "name": "Проект Beta",
+            "description": "Описание проекта Бета",
+            "videoUrl": "just some url",
+            "authors": [
+                {
+                    "id": 3,
+                    "name": "Алексей Смирнов"
+                }
+            ],
+            "links": [
+                {
+                    "id": 22,
+                    "url": "https://github.com/project-beta"
+                }
+            ],
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Games"
+                },
+                {
+                    "id": 2,
+                    "name": "Scence"
+                }
+            ],
+            "photos": []
+        }
+    ],
+    "pageable": {
+        "pageNumber": 3,
+        "pageSize": 3,
+        "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 9,
+        "paged": true,
+        "unpaged": false
+    },
+    "last": true,
+    "totalPages": 4,
+    "totalElements": 11,
+    "size": 3,
+    "number": 3,
+    "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+    },
+    "numberOfElements": 2,
+    "first": false,
+    "empty": false
+}
+
+```
 ### Private token needed
 Token should be given in header:
 ```
